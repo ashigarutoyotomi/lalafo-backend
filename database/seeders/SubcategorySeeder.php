@@ -62,12 +62,6 @@ class SubcategorySeeder extends Seeder
             $categoryId = $category['id'];
             $categoryName = $category['name'];
 
-            // Insert category
-            DB::table('categories')->insert([
-                'id' => $categoryId,
-                'name' => $categoryName,
-            ]);
-
             // Insert subcategories
             foreach ($subcategories[$categoryId] as $subcategoryName) {
                 DB::table('subcategories')->insert([

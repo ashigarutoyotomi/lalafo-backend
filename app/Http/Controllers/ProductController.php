@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\ProductAction;
-use App\Gateways\ProductGateway;
+use App\Http\Actions\ProductAction;
 use App\Http\Controllers\Controller;
+use App\Http\Gateways\ProductGateway;
 use App\Http\Requests\CreateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -55,9 +55,15 @@ class ProductController extends Controller
         return (new ProductAction)->create($request);
     }
 
-    public function delete(int $productId)
+    public function destroy(int $productId)
     {
-        $product = ProductAction::delete($productId);
+        $product = ProductAction::destroy($productId);
+
+        return $product;
+    }
+    public function update(Request $request, int $productId)
+    {
+        $product = (new ProductAction)->update($request, $productId);
 
         return $product;
     }

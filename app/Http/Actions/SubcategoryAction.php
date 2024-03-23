@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Actions;
+namespace App\Http\Actions;
 
+use App\Http\Gateways\SubcategoryGateway;
+use App\Models\Subcategory;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -23,14 +25,18 @@ class SubcategoryAction
         return $subcategory;
     }
 
-    public function update($data)
-    {$subcategory = (new SubcategoryGateway)->getById($data->id);
+    public function update($data, int $id)
+    {$subcategory = (new SubcategoryGateway)->getById($id);
         try {
             DB::beginTransaction();
 
             abort_unless((bool) $subcategory, 404, "Subsubcategory not found");
-            $subcategory->name = $data->name;
-            $subcategory->subcategory_id = $data->subcategory_id;
+            if ($data->name != null) {
+                $subcategory->name = $data->name;
+            }
+            if ($data->category_id != null) {
+                $subcategory->category_id = $data->category_id;
+            }
             $subcategory->save();
             DB::commit();
         } catch (Exception $e) {

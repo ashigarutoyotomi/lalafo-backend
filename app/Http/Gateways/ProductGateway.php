@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Gateways;
+namespace App\Http\Gateways;
 
 use App\Models\Product;
 use App\Traits\BasicGatewaysTrait;

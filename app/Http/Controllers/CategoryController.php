@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\CategoryAction;
-use App\Gateways\CategoryGateway;
+use App\Http\Actions\CategoryAction;
+use App\Http\Gateways\CategoryGateway;
+use App\Http\Requests\CreateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,7 @@ class CategoryController extends Controller
         abort_unless((bool) $category, 404, 'Category not found');
 
         $gateway = new CategoryGateway();
-        $gateway->with('user');
+        $gateway->with('subcategories');
 
         return $gateway->getById($categoryId);
     }
@@ -44,9 +45,15 @@ class CategoryController extends Controller
         return (new CategoryAction)->create($request);
     }
 
-    public function delete(int $categoryId)
+    public function destroy(int $categoryId)
     {
         $category = CategoryAction::delete($categoryId);
+
+        return $category;
+    }
+    public function update(Request $request, int $categoryId)
+    {
+        $category = (new CategoryAction)->update($request, $categoryId);
 
         return $category;
     }

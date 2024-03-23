@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -43,10 +44,11 @@ class UserController extends Controller
             DB::beginTransaction();
             $user = User::findOrFail($id);
 
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            if ($request->has('password')) {
-                $user->password = bcrypt($request->input('password'));
+            if ($request->name != null) {
+                $user->name = $request->input('name');
+            }
+            if ($request->password != null) {
+                $user->password = Hash::make($request->input('password'));
             }
 
             $user->save();
@@ -55,6 +57,7 @@ class UserController extends Controller
             DB::rollback();
             return $e->getMessage();
         }
+        return $user;
     }
 
     /**
@@ -71,5 +74,19 @@ class UserController extends Controller
             DB::rollback();
             return $e->getMessage();
         }
+        return $user;
     }
-}
+    public function me()
+    {
+        $user = auth()->user()
+        ;
+        return $user;
+    }
+    public function myProducts()
+    {
+        $user = User::find(auth()->user()
+                ->id);
+            $products = $user->products;
+            return $products;
+        }
+    }

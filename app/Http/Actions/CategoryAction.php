@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Actions;
+namespace App\Http\Actions;
 
-use App\Gateways\CategoryGateway;
+use App\Http\Gateways\CategoryGateway;
 use App\Models\Category;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +11,10 @@ class CategoryAction
 {
     public function create($request)
     {
+        $category = Category::where('name', $request->name)->first();
+        if ($category != null) {
+            abort(422, 'Category is already exists');
+        }
         try {
             DB::beginTransaction();
             $category = new Category;
@@ -28,9 +32,19 @@ class CategoryAction
     public function update($data)
     {
         $category = (new CategoryGateway)->getById($data->id);
-        abort_unless((bool) $category, 404, "Category not found");
-        $category->name = $data->name;
-        $category->save();
+        try {
+            DB::beginTransaction();
+
+            abort_unless((bool) $category, 404, "Subcategory not found");
+            if ($data->name != null) {
+                $category->name = $data->name;
+            }
+            $category->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
         return $category;
     }
 

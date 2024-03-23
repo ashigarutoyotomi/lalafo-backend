@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\SubcategoryAction;
-use App\Gateways\SubcategoryGateway;
+use App\Http\Actions\SubcategoryAction;
+use App\Http\Gateways\SubcategoryGateway;
+use App\Http\Requests\CreateSubcategoryRequest;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
@@ -34,8 +35,8 @@ class SubcategoryController extends Controller
         abort_unless((bool) $subcategory, 404, 'Subcategory not found');
 
         $gateway = new SubcategoryGateway();
-        $gateway->with('user');
-
+        // $gateway->with('category');
+        $gateway->with('products');
         return $gateway->getById($subcategoryId);
     }
     public function store(CreateSubcategoryRequest $request)
@@ -44,9 +45,15 @@ class SubcategoryController extends Controller
         return (new SubcategoryAction)->create($request);
     }
 
-    public function delete(int $subcategoryId)
+    public function destroy(int $subcategoryId)
     {
         $subcategory = SubcategoryAction::delete($subcategoryId);
+
+        return $subcategory;
+    }
+    public function update(Request $request, int $subcategoryId)
+    {
+        $subcategory = (new SubcategoryAction)->update($request, $subcategoryId);
 
         return $subcategory;
     }

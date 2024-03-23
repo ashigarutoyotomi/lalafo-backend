@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Actions;
+namespace App\Http\Actions;
 
-use App\Gateways\ProductGateway;
+use App\Http\Gateways\ProductGateway;
 use App\Models\Product;
 use App\Models\ProductPhoto;
 use Exception;
@@ -15,9 +15,11 @@ class ProductAction
         try {
             DB::beginTransaction();
             $product = new Product;
-            $product->subcategory_id = $request->subcategory_id;
             $product->description = $request->description;
             $product->price = $request->price;
+            $product->name = $request->name;
+            $product->user_id = $request->user_id;
+            $product->subcategory_id = $request->subcategory_id;
             if ($request->photos != null) {
                 foreach ($request->file('photos') as $photo) {
                     $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
@@ -42,16 +44,32 @@ class ProductAction
     public function update($data)
     {
         $product = (new ProductGateway)->getById($data->id);
-        abort_unless((bool) $product, 404, "Product not found");
-        $product->number = $data->number;
-        $product->days = $data->days;
-        $product->status = $data->status;
-        $product->user_id = $data->user_id;
-        $product->save();
+        try {
+            DB::beginTransaction();
+
+            abort_unless((bool) $product, 404, "Product not found");
+            if ($data->name != null) {
+                $product->name = $data->name;
+            }
+            if ($data->subcategory_id != null) {
+                $product->subcategory_id = $data->subcategory_id;
+            }
+            if ($data->price != null) {
+                $product->price = $data->price;
+            }
+            if ($data->decription != null) {
+                $product->decription = $data->decription;
+            }
+            $product->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
         return $product;
     }
 
-    public static function delete(int $productId)
+    public static function destroy(int $productId)
     {
         try {
             DB::beginTransaction();

@@ -1,5 +1,7 @@
 <?php
+namespace Database\Seeders;
 
+use App\Models\Subcategory;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,7 @@ class ProductSeeder extends Seeder
         $faker = Faker::create();
 
         // Get all subcategories
-        $subcategories = App\Models\Subcategory::all();
+        $subcategories = Subcategory::all();
 
         // Iterate through each subcategory
         foreach ($subcategories as $subcategory) {
@@ -27,7 +29,7 @@ class ProductSeeder extends Seeder
                     DB::table('products')->insert([
                         'name' => $faker->word,
                         'description' => $faker->sentence,
-                        'price' => $faker->randomFloat(2, 10, 1000), // Adjust the price range as needed
+                        'price' => $faker->randomFloat(2, 10, 1000),
                         'subcategory_id' => $subcategory->id,
                         'created_at' => now(),
                         'updated_at' => now(),

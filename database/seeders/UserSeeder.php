@@ -1,9 +1,11 @@
 <?php
+namespace Database\Seeders;
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -24,7 +26,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // You can adjust the password if needed
                 'phone_number' => $faker->phoneNumber, // Sample phone number
-                'remember_token' => str_random(10), // Generating a random remember token
+                'remember_token' => Str::random(12), // Generating a random remember token
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

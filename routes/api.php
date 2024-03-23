@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductPhotoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
@@ -30,16 +32,27 @@ Route::middleware('auth:sanctum')->group(function () {
     // Products CRUD
     Route::get('/products', [ProductController::class, 'index']);
     Route::post('/products', [ProductController::class, 'store']);
+    Route::get('/products/random-products', [ProductController::class, 'getRandomProducts']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
-    Route::get('/products/random', [ProductController::class, 'getRandomProducts']);
 
     // User Notifications CRUD
     Route::get('/user-notifications', [UserNotificationController::class, 'index']);
     Route::post('/user-notifications', [UserNotificationController::class, 'store']);
     Route::delete('/user-notifications/{id}', [UserNotificationController::class, 'destroy']);
     // User CRUD
-    Route::put('/user-notifications', [UserController::class, 'update']);
-    Route::delete('/user-notifications/{id}', [UserController::class, 'destroy']);
+    Route::get('/users/me', [UserController::class, 'me']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::get('/users/products', [UserController::class, 'myProducts']);
+
+    Route::get('/favorites', [FavoritesController::class, 'index']);
+    Route::post('/favorites/favorite', [FavoritesController::class, 'favorite']);
+    Route::post('/favorites/unfavorite', [FavoritesController::class, 'unfavorite']);
+
+    // Product photo CRUD
+    Route::get('/product-photos', [ProductPhotoController::class, 'index']);
+    Route::post('/product-photos', [ProductPhotoController::class, 'store']);
+    Route::delete('/product-photos/{id}', [ProductPhotoController::class, 'destroy']);
 });

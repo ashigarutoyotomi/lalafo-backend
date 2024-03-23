@@ -17,7 +17,7 @@ class ProductController extends Controller
 
         $keywords = $request->get('keywords');
         if ($keywords) {
-            $gateway->setSearch($keywords, ['id']);
+            $gateway->setSearch($keywords, $request->get('columns'));
         }
 
         $filters = json_decode($request->get('filters'), true);
@@ -36,7 +36,7 @@ class ProductController extends Controller
         abort_unless((bool) $product, 404, 'Product not found');
 
         $gateway = new ProductGateway();
-        $gateway->with('creator');
+        $gateway->with('user');
 
         return $gateway->getById($productId);
     }
@@ -51,17 +51,14 @@ class ProductController extends Controller
 
     public function store(CreateProductRequest $request)
     {
-        $data = ($request);
 
-        return (new ProductAction)->create($data);
+        return (new ProductAction)->create($request);
     }
 
     public function delete(int $productId)
     {
-        $product = Product::find($productId);
-        abort_unless((bool) $product, 404, 'sim card not found');
+        $product = ProductAction::delete($productId);
 
-        $product->delete();
         return $product;
     }
 }

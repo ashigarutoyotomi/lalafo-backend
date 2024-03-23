@@ -4,32 +4,66 @@ namespace App\Actions;
 
 use App\Gateways\ProductGateway;
 use App\Models\Product;
+use App\Models\ProductPhoto;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ProductAction
 {
-    public function create($data)
+    public function create($request)
     {
-        return Product::create($data->toArray());
+        try {
+            DB::beginTransaction();
+            $product = new Product;
+            $product->subcategory_id = $request->subcategory_id;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            if ($request->photos != null) {
+                foreach ($request->file('photos') as $photo) {
+                    $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
+
+                    $path = $photo->storeAs('photos', $filename, 'public');
+
+                    $photoModel = new ProductPhoto;
+                    $photoModel->path = $path;
+                    $photoModel->save();
+                }
+            }
+
+            $product->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            return $e->getMessage();
+        }
+        return $product;
     }
 
     public function update($data)
     {
-        $simcard = (new ProductGateway)->getById($data->id);
-        abort_unless((bool) $simcard, 404, "Product not found");
-        $simcard->number = $data->number;
-        $simcard->days = $data->days;
-        $simcard->status = $data->status;
-        $simcard->user_id = $data->user_id;
-        $simcard->save();
-        return $simcard;
+        $product = (new ProductGateway)->getById($data->id);
+        abort_unless((bool) $product, 404, "Product not found");
+        $product->number = $data->number;
+        $product->days = $data->days;
+        $product->status = $data->status;
+        $product->user_id = $data->user_id;
+        $product->save();
+        return $product;
     }
 
-    public function delete(int $simcardId)
+    public static function delete(int $productId)
     {
-        $simcard = (new ProductGateway)->getById($simcardId);
-        abort_unless((bool) $simcard, 404, "Product not found");
-        $simcard->delete();
-        return $simcard;
+        try {
+            DB::beginTransaction();
+            $product = (new ProductGateway)->getById($productId);
+            abort_unless((bool) $product, 404, "Product not found");
+            $product->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+        return $product;
     }
 
 }

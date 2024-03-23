@@ -18,7 +18,7 @@ class RegisterController extends Controller
         // Log::info($request->all());
         $request->validate([
             'email' => 'required|email|unique:users',
-            'password' => 'required|string',
+            'password' => 'required|string|min:8',
             'name' => 'required|string|max:50']);
         $user = User::create([
             'name' => $request->name,
@@ -33,7 +33,7 @@ class RegisterController extends Controller
         // Log::info($request->all());
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|string']);
+            'password' => 'required|string|min:8']);
         $credentials = [
             'email' => $request->input('email'),
             'password' => $request->input('password'),

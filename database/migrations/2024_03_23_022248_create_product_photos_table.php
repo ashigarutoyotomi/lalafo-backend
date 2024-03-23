@@ -11,8 +11,9 @@ class CreateProductPhotosTable extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->string('path'); // Путь к файлу
+            $table->string('path');
             $table->timestamps();
+            $table->primary(['id', 'product_id']);
         });
     }
 

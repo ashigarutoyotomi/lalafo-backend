@@ -78,4 +78,10 @@ class ProductGateway
 
         return $query;
     }
+    public function getRandomProducts()
+    {
+        $randomProducts = Product::inRandomOrder()->limit(50)->get();
+        return $randomProducts;
+
+    }
 }

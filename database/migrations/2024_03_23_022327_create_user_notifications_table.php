@@ -14,6 +14,7 @@ class CreateUserNotificationsTable extends Migration
             $table->string('message');
             $table->boolean('read')->default(false); // Indicates whether the notification has been read
             $table->timestamps();
+            $table->primary(['id', 'user_id']);
         });
     }
 

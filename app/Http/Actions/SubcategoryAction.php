@@ -25,17 +25,17 @@ class SubcategoryAction
         return $subcategory;
     }
 
-    public function update($data, int $id)
+    public function update($request, int $id)
     {$subcategory = (new SubcategoryGateway)->getById($id);
         try {
             DB::beginTransaction();
 
-            abort_unless((bool) $subcategory, 404, "Subsubcategory not found");
-            if ($data->name != null) {
-                $subcategory->name = $data->name;
+            abort_unless((bool) $subcategory, 404, "Subcategory not found");
+            if ($request->name != null) {
+                $subcategory->name = $request->name;
             }
-            if ($data->category_id != null) {
-                $subcategory->category_id = $data->category_id;
+            if ($request->category_id != null) {
+                $subcategory->category_id = $request->category_id;
             }
             $subcategory->save();
             DB::commit();

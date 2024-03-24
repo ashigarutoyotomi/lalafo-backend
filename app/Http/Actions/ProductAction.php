@@ -20,15 +20,18 @@ class ProductAction
             $product->name = $request->name;
             $product->user_id = $request->user_id;
             $product->subcategory_id = $request->subcategory_id;
+            $product->activated = true;
             if ($request->photos != null) {
-                foreach ($request->file('photos') as $photo) {
-                    $filename = uniqid() . '_' . time() . '.' . $photo->getClientOriginalExtension();
+                foreach ($request->file('photos') as $file) {
+                    if ($file && $file->isValid()) {
+                        $fileName = time() . '_' . $file->getClientOriginalName();
+                        $file->storeAs('photos', $fileName, 'public');
 
-                    $path = $photo->storeAs('photos', $filename, 'public');
-
-                    $photoModel = new ProductPhoto;
-                    $photoModel->path = $path;
-                    $photoModel->save();
+                        $product_photo = new ProductPhoto;
+                        $product_photo->path = 'storage/photos/' . $fileName;
+                        $product_photo->product_id = $request->product_id;
+                        $product_photo->save();
+                    }
                 }
             }
 
@@ -41,24 +44,24 @@ class ProductAction
         return $product;
     }
 
-    public function update($data)
+    public function update($request, $productId)
     {
-        $product = (new ProductGateway)->getById($data->id);
+        $product = (new ProductGateway)->getById($productId);
         try {
             DB::beginTransaction();
 
             abort_unless((bool) $product, 404, "Product not found");
-            if ($data->name != null) {
-                $product->name = $data->name;
+            if ($request->name != null) {
+                $product->name = $request->name;
             }
-            if ($data->subcategory_id != null) {
-                $product->subcategory_id = $data->subcategory_id;
+            if ($request->subcategory_id != null) {
+                $product->subcategory_id = $request->subcategory_id;
             }
-            if ($data->price != null) {
-                $product->price = $data->price;
+            if ($request->price != null) {
+                $product->price = $request->price;
             }
-            if ($data->decription != null) {
-                $product->decription = $data->decription;
+            if ($request->description != null) {
+                $product->description = $request->description;
             }
             $product->save();
             DB::commit();
@@ -83,5 +86,20 @@ class ProductAction
         }
         return $product;
     }
+    public function switch($productId)
+    {
+            $product = (new ProductGateway)->getById($productId);
+            try {
+                DB::beginTransaction();
 
+                abort_unless((bool) $product, 404, "Product not found");
+                $product->activated = !$product->activated;
+                $product->save();
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                return $e->getMessage();
+            }
+            return $product;
+    }
 }

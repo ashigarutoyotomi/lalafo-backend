@@ -20,7 +20,7 @@ class ProductGateway
         if ($this->limit) {
             $query->limit($this->limit);
         }
-
+        $query->where('activated', true);
         if ($this->search['keywords'] && count($this->search['columns'])) {
             $this->appendSearch($query);
         }
@@ -43,7 +43,7 @@ class ProductGateway
         if ($this->with) {
             $query->with($this->with);
         }
-
+        $query->with('photos');
         $query->where([
             'id' => $ProductId,
         ]);
@@ -80,7 +80,7 @@ class ProductGateway
     }
     public function getRandomProducts()
     {
-        $randomProducts = Product::inRandomOrder()->limit(50)->get();
+        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->get();
         return $randomProducts;
 
     }

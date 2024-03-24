@@ -33,6 +33,7 @@ class ProductSeeder extends Seeder
                         'subcategory_id' => $subcategory->id,
                         'created_at' => now(),
                         'updated_at' => now(),
+                        'activated' => true,
                     ]);
                 }
             }

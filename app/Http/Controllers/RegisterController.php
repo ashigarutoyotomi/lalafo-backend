@@ -103,7 +103,7 @@ class RegisterController extends Controller
         // Simulate sending the verification code via SMS (not implemented in this example)
 
         // Return a response indicating that the verification code has been sent
-        return response()->json(['message' => 'Verification code sent']);
+        return response()->json(['message' => 'Verification code sent', 'code' => $verificationCode]);
     }
     public function verifyPhoneNumber(Request $request, $userId)
     {

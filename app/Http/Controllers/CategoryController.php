@@ -53,6 +53,7 @@ class CategoryController extends Controller
     }
     public function update(Request $request, int $categoryId)
     {
+        $request->validate(['name' => 'required|string']);
         $category = (new CategoryAction)->update($request, $categoryId);
 
         return $category;

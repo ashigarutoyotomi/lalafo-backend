@@ -32,12 +32,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Products CRUD
     Route::get('/products', [ProductController::class, 'index']);
     Route::post('/products', [ProductController::class, 'store']);
+    Route::post('/products/{id}/switch', [ProductController::class, 'switch']);
     Route::get('/products/random-products', [ProductController::class, 'getRandomProducts']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
-    // User Notifications CRUD
+    // User Notifications CRUD? dont know how to use it here
     Route::get('/user-notifications', [UserNotificationController::class, 'index']);
     Route::post('/user-notifications', [UserNotificationController::class, 'store']);
     Route::delete('/user-notifications/{id}', [UserNotificationController::class, 'destroy']);

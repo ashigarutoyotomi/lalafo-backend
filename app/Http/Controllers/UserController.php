@@ -78,9 +78,10 @@ class UserController extends Controller
     }
     public function me()
     {
-        $user = auth()->user()
-        ;
-        return $user;
+        $user = auth()->user();
+
+        return ['user' => $user,
+            'products' => $user->products];
     }
     public function myProducts()
     {

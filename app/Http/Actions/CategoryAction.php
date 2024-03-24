@@ -29,16 +29,13 @@ class CategoryAction
         return $category;
     }
 
-    public function update($data)
+    public function update($request, $categoryId)
     {
-        $category = (new CategoryGateway)->getById($data->id);
+        $category = (new CategoryGateway)->getById($categoryId);
         try {
             DB::beginTransaction();
-
-            abort_unless((bool) $category, 404, "Subcategory not found");
-            if ($data->name != null) {
-                $category->name = $data->name;
-            }
+            abort_unless((bool) $category, 404, "Category not found");
+            $category->name = $request->name;
             $category->save();
             DB::commit();
         } catch (Exception $e) {

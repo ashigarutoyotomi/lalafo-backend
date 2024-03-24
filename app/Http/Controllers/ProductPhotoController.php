@@ -16,6 +16,7 @@ class ProductPhotoController extends Controller
      */
     public function index(Request $request)
     {
+        $request->validate(['product_id' => 'required|integer|exists:products,id']);
         $product = Product::findOrFail($request->product_id);
         return $product->photos;
 
@@ -37,11 +38,11 @@ class ProductPhotoController extends Controller
             $photo->storeAs('photos', $fileName, 'public');
 
             $product_photo = new ProductPhoto;
-            $product_photo->path = 'storage/photos/' . $fileName;
+            $product_photo->path = $fileName;
             $product_photo->product_id = $request->product_id;
             $product_photo->save();
 
-            return response('Product created successfully.', 201);
+            return response('Product Photo created successfully.', 201);
         }
 
     }
@@ -65,16 +66,19 @@ class ProductPhotoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
         $product_photo = ProductPhoto::findOrFail($id);
+
         try {
             DB::beginTransaction();
-            $product_photo->delete();
-            if (Storage::disk('public')->exists('storage/photos/' . $product_photo->photo_path)) {
-                Storage::disk('public')->delete('storage/photos/' . $product_photo->photo_path);
+
+            if (Storage::exists('public/photos/' . $product_photo->path)) {
+                Storage::delete('public/photos/' . $product_photo->path);
             }
+            $product_photo->delete();
             DB::commit();
+            return response('Deleted successfully', 204);
         } catch (Exception $e) {
             DB::rollback();
             return $e->getMessage();

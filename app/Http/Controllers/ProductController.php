@@ -51,7 +51,6 @@ class ProductController extends Controller
 
     public function store(CreateProductRequest $request)
     {
-
         return (new ProductAction)->create($request);
     }
 
@@ -66,5 +65,11 @@ class ProductController extends Controller
         $product = (new ProductAction)->update($request, $productId);
 
         return $product;
+    }
+    public function switch(Request $request, int $productId)
+    {
+            $product = (new ProductAction)->switch($productId);
+
+            return $product;
     }
 }

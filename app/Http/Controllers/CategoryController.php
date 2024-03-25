@@ -49,7 +49,7 @@ class CategoryController extends Controller
     {
         $category = CategoryAction::delete($categoryId);
 
-        return $category;
+        return response('Deleted successfully', 204);
     }
     public function update(Request $request, int $categoryId)
     {

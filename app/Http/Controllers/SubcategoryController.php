@@ -49,7 +49,7 @@ class SubcategoryController extends Controller
     {
         $subcategory = SubcategoryAction::delete($subcategoryId);
 
-        return $subcategory;
+        return response('Deleted successfully', 204);
     }
     public function update(Request $request, int $subcategoryId)
     {

@@ -74,7 +74,7 @@ class UserController extends Controller
             DB::rollback();
             return $e->getMessage();
         }
-        return $user;
+        return response('Deleted successfully', 204);
     }
     public function me()
     {

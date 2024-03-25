@@ -58,7 +58,7 @@ class ProductController extends Controller
     {
         $product = ProductAction::destroy($productId);
 
-        return $product;
+        return response('Deleted successfully', 204);
     }
     public function update(Request $request, int $productId)
     {

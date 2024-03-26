@@ -12,21 +12,23 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $gateway = new CategoryGateway();
+        // $gateway = new CategoryGateway();
 
-        $keywords = $request->get('keywords');
-        if ($keywords) {
-            $gateway->setSearch($keywords, $request->get('columns'));
-        }
+        // $keywords = $request->get('keywords');
+        // if ($keywords) {
+        //     $gateway->setSearch($keywords, $request->get('columns'));
+        // }
 
-        $filters = json_decode($request->get('filters'), true);
-        if ($filters) {
-            $gateway->setFilters($filters);
-        }
+        // $filters = json_decode($request->get('filters'), true);
+        // if ($filters) {
+        //     $gateway->setFilters($filters);
+        // }
 
-        $gateway->paginate(20);
+        // $gateway->paginate(20);
 
-        return $gateway->all();
+        // return $gateway->all();
+        $categories = Category::all();
+        return $categories;
     }
 
     public function show(int $categoryId)

@@ -83,7 +83,7 @@ class ProductGateway
     }
     public function getRandomProducts()
     {
-        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->with('favorites')->get();
+        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(40)->with('favorites')->get();
         return $randomProducts;
 
     }

@@ -43,10 +43,8 @@ class ProductController extends Controller
 
     public function getRandomProducts()
     {
-        $gateway = new ProductGateway();
-        $products = $gateway->getRandomProducts();
-
-        return $products;
+        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->with('favorites')->with('subcategory')->get();
+        return $randomProducts;
     }
 
     public function store(CreateProductRequest $request)

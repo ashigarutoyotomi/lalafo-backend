@@ -16,7 +16,7 @@ class ProductGateway
         if ($this->with) {
             $query->with($this->with);
         }
-
+        $query->with('favorites');
         if ($this->limit) {
             $query->limit($this->limit);
         }
@@ -43,6 +43,7 @@ class ProductGateway
         if ($this->with) {
             $query->with($this->with);
         }
+        $query->with('favorites');
         $query->with('photos');
         $query->where([
             'id' => $ProductId,
@@ -63,6 +64,8 @@ class ProductGateway
             'category_id' => $ProductCategoryId,
         ]);
 
+        $query->with('favorites');
+
         return $query->first();
     }
 
@@ -80,7 +83,7 @@ class ProductGateway
     }
     public function getRandomProducts()
     {
-        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->get();
+        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->with('favorites')->get();
         return $randomProducts;
 
     }

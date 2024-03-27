@@ -18,7 +18,7 @@ class ProductAction
             $product->description = $request->description;
             $product->price = $request->price;
             $product->name = $request->name;
-            $product->user_id = $request->user_id;
+            $product->user_id = auth()->user()->id;
             $product->subcategory_id = $request->subcategory_id;
             $product->activated = true;
             if ($request->photos != null) {

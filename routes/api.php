@@ -49,8 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/products', [UserController::class, 'myProducts']);
 
     Route::get('/favorites', [FavoritesController::class, 'index']);
-    Route::post('/favorites/favorite', [FavoritesController::class, 'favorite']);
-    Route::post('/favorites/unfavorite', [FavoritesController::class, 'unfavorite']);
+    Route::post('/favorites/{id}/favorite', [FavoritesController::class, 'favorite']);
+    Route::post('/favorites/{id}/unfavorite', [FavoritesController::class, 'unfavorite']);
 
     // Product photo CRUD
     Route::get('/product-photos', [ProductPhotoController::class, 'index']);

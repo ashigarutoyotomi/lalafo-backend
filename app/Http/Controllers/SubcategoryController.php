@@ -23,8 +23,7 @@ class SubcategoryController extends Controller
         if ($filters) {
             $gateway->setFilters($filters);
         }
-
-        $gateway->paginate(20);
+        // $gateway->paginate(20);
 
         return $gateway->all();
     }

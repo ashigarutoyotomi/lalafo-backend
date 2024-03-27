@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -16,18 +17,20 @@ class FavoritesController extends Controller
         return $user->favoriteProducts;
     }
 
-    public function favorite(Request $request)
+    public function favorite(Request $request, $id)
     {
-        $user = User::find(auth()->user()->id);
-        $user->favoriteProducts()->attach($request->product_id);
-        return response('Favorited product by id: ' . $request->product_id, 201);
+        $user = User::findOrFail(auth()->user()->id);
+        $product = Product::findOrFail($id);
+        $user->favoriteProducts()->attach($id);
+        return response('Favorited product by id: ' . $id, 201);
     }
 
-    public function unfavorite(Request $request)
+    public function unfavorite(Request $request, $id)
     {
-        $user = User::find(auth()->user()->id);
-        $user->favoriteProducts()->detach($request->product_id);
-        return response('unFavorited product by id: ' . $request->product_id, 201);
+        $user = User::findOrFail(auth()->user()->id);
+        $product = Product::findOrFail($id);
+        $user->favoriteProducts()->detach($id);
+        return response('unFavorited product by id: ' . $id, 204);
     }
 
 }

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Actions\ProductAction;
 use App\Http\Controllers\Controller;
 use App\Http\Gateways\ProductGateway;
-use App\Http\Requests\CreateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -47,8 +47,10 @@ class ProductController extends Controller
         return $randomProducts;
     }
 
-    public function store(CreateProductRequest $request)
+    // public function store(CreateProductRequest $request)
+    public function store(Request $request)
     {
+        Log::info($request->all());
         return (new ProductAction)->create($request);
     }
 
@@ -69,5 +71,13 @@ class ProductController extends Controller
             $product = (new ProductAction)->switch($productId);
 
             return $product;
+    }
+    public function search(Request $request)
+    {
+        $request->validate(
+            ['category_id' => 'required|integer|exists:categories,id', 'subcategory_id' => 'required|integer|exists:subcategories,id', 'keyword' => 'required|string|min:3|max:50']
+        );
+        $products = Product::where('subcategory_id', $request->subcategory_id)->where('description', 'LIKE', '%' . $request->keyword . '%')->where('activated', true)->get();
+        return $products;
     }
 }

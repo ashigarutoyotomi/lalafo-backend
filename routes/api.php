@@ -28,9 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/subcategories/{id}', [SubcategoryController::class, 'show']);
     Route::put('/subcategories/{id}', [SubcategoryController::class, 'update']);
     Route::delete('/subcategories/{id}', [SubcategoryController::class, 'destroy']);
+    Route::get('/subcategories/category/{id}', [SubcategoryController::class, 'getByCategoryId']);
 
     // Products CRUD
     Route::get('/products', [ProductController::class, 'index']);
+    Route::post('/products/search', [ProductController::class, 'search']);
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}/switch', [ProductController::class, 'switch']);
     Route::get('/products/random-products', [ProductController::class, 'getRandomProducts']);

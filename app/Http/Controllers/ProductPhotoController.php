@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductPhotoController extends Controller
 {
@@ -34,7 +35,7 @@ class ProductPhotoController extends Controller
 
         if ($request->hasFile('photo') && $request->photo->isValid()) {
             $photo = $request->file('photo');
-            $fileName = time() . '_' . $photo->getClientOriginalName();
+            $fileName = time() . '_' . Str::random(10);
             $photo->storeAs('photos', $fileName, 'public');
 
             $product_photo = new ProductPhoto;

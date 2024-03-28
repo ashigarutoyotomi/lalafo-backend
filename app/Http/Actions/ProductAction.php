@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\ProductPhoto;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductAction
 {
@@ -24,7 +26,7 @@ class ProductAction
             if ($request->photos != null) {
                 foreach ($request->file('photos') as $file) {
                     if ($file && $file->isValid()) {
-                        $fileName = time() . '_' . $file->getClientOriginalName();
+                        $fileName = time() . '_' . Str::random(10);
                         $file->storeAs('photos', $fileName, 'public');
 
                         $product_photo = new ProductPhoto;
@@ -79,6 +81,15 @@ class ProductAction
             $product = (new ProductGateway)->getById($productId);
             abort_unless((bool) $product, 404, "Product not found");
             $product->delete();
+            $photos = $product->photos;
+            if (count($photos) > 0) {
+                foreach ($photos as $photo) {
+                    if (Storage::exists('public/photos/' . $photo->path)) {
+                        Storage::delete('public/photos/' . $photo->path);
+                    }
+                    $photo->delete();
+                }
+            }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

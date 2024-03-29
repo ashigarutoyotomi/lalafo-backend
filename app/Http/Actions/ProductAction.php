@@ -24,9 +24,10 @@ class ProductAction
             $product->subcategory_id = $request->subcategory_id;
             $product->activated = true;
             if ($request->photos != null) {
+
                 foreach ($request->file('photos') as $file) {
-                    if ($file && $file->isValid()) {
-                        $fileName = time() . '_' . Str::random(10);
+                    if ($file->isValid()) {
+                        $fileName = time() . '_' . Str::random(10) . '.' . $file->extension();
                         $file->storeAs('photos', $fileName, 'public');
 
                         $product_photo = new ProductPhoto;

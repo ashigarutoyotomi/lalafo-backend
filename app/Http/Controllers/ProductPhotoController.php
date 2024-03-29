@@ -35,7 +35,7 @@ class ProductPhotoController extends Controller
 
         if ($request->hasFile('photo') && $request->photo->isValid()) {
             $photo = $request->file('photo');
-            $fileName = time() . '_' . Str::random(10);
+            $fileName = time() . '_' . Str::random(10) . '.' . $photo->extension();
             $photo->storeAs('photos', $fileName, 'public');
 
             $product_photo = new ProductPhoto;

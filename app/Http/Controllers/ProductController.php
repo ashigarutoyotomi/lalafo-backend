@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Actions\ProductAction;
 use App\Http\Controllers\Controller;
 use App\Http\Gateways\ProductGateway;
+use App\Http\Requests\CreateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -43,14 +43,13 @@ class ProductController extends Controller
 
     public function getRandomProducts()
     {
-        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->with('favorites')->with('subcategory')->get();
+        $randomProducts = Product::where('activated', true)->inRandomOrder()->limit(50)->with('favorites')->with('subcategory')->with('photos')->get();
         return $randomProducts;
     }
 
-    // public function store(CreateProductRequest $request)
-    public function store(Request $request)
+    public function store(CreateProductRequest $request)
+    // public function store(Request $request)
     {
-        Log::info($request->all());
         return (new ProductAction)->create($request);
     }
 
